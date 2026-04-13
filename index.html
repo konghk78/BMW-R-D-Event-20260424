@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Workshop 추천 장소 지도 — 삼청동 & 인사동</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', 'Malgun Gothic', sans-serif; overflow: hidden; }
+        #map { width: 100%; height: 100vh; }
+        .legend {
+            background: white; padding: 12px 16px; border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-size: 13px; line-height: 1.8;
+        }
+        .legend h4 { margin-bottom: 6px; font-size: 14px; }
+        .legend-item {
+            display: flex; align-items: center; gap: 8px;
+            cursor: pointer; padding: 2px 4px; border-radius: 4px; transition: background 0.15s;
+        }
+        .legend-item:hover { background: #f0f0f0; }
+        .legend-dot {
+            width: 14px; height: 14px; border-radius: 50%; display: inline-block;
+            border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.3); flex-shrink: 0;
+        }
+        .legend-item .arrow { font-size: 10px; margin-left: auto; transition: transform 0.2s; color: #999; }
+        .legend-item.open .arrow { transform: rotate(90deg); }
+        .legend-detail { display: none; padding: 2px 0 4px 26px; font-size: 11.5px; line-height: 1.7; color: #444; }
+        .legend-detail.open { display: block; }
+        .legend-detail .spot-link {
+            cursor: pointer; color: #333; text-decoration: none;
+            display: block; padding: 1px 6px; border-radius: 3px; transition: background 0.15s;
+        }
+        .legend-detail .spot-link:hover { background: #e8f0fe; color: #1a73e8; }
+        .custom-tooltip { padding: 0 !important; border: none !important; background: none !important; box-shadow: none !important; }
+        .custom-tooltip .leaflet-tooltip-content { padding: 0; }
+        .hover-tip {
+            background: #fff; border-radius: 10px; overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25); width: 240px; font-family: 'Segoe UI','Malgun Gothic',sans-serif;
+        }
+        .hover-tip .tip-img { width: 240px; height: 130px; object-fit: cover; display: block; }
+        .hover-tip .tip-info { padding: 8px 10px; }
+        .hover-tip .tip-name { font-size: 12.5px; font-weight: 700; line-height: 1.3; color: #222; margin-bottom: 3px; }
+        .hover-tip .tip-cat { font-size: 10.5px; color: #888; display: block; margin-bottom: 4px; }
+        .hover-tip .tip-desc { font-size: 11px; color: #555; line-height: 1.4; display: block; }
+        .hover-tip .tip-coord { font-size: 9.5px; color: #aaa; margin-top: 4px; display: block; }
+        #coord-display {
+            position: fixed; bottom: 8px; left: 8px; z-index: 1000;
+            background: rgba(0,0,0,0.7); color: #fff; padding: 4px 10px;
+            border-radius: 6px; font-size: 12px; font-family: 'Consolas','Courier New',monospace;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+    const map = L.map('map').setView([37.5770, 126.9840], 15);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO', subdomains: 'abcd', maxZoom: 20
+    }).addTo(map);
+
+    let currentLang = 'ko'; // 'ko' or 'en'
+
+    const spots_PhotoSpots = [
+        { name: '북촌 제5경 (가회동 골목길 ↓) Bukchon 5th Scenic Point', lat: 37.5825, lng: 126.9837, desc: '한옥 골목길 대표 포토스팟 / SNS 인기 명소', desc_en: 'Iconic hanok alley photo spot / Popular on SNS', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 미션 (Photo)</b><br>가회동 골목 내리막에서 한옥 지붕이 보이는 인생샷 찍기<br><span style="color:#888">📋 인증: 한옥 지붕 + 인생샷</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 15점</span> | 난이도 ★★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 Mission (Photo)</b><br>Take a signature photo with hanok rooftops on the downhill alley<br><span style="color:#888">📋 Proof: Hanok rooftops + signature photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 15 pts</span> | Difficulty ★★</div>', path: [[37.5825,126.9837],[37.5829,126.9836],[37.5833,126.9834]] },
+        { name: '북촌 제6경 (가회동 골목길 ↑) Bukchon 6th Scenic Point', lat: 37.5833, lng: 126.9834, desc: '북악산을 배경으로 한옥 마을 전경', desc_en: 'Hanok village panorama with Bugaksan backdrop', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>❓ 퀴즈 (Quiz)</b><br>이 장소 안내판에서 경관 설명을 읽고, 어떤 산이 언급되어 있는지 찾아 사진 찍기<br><span style="color:#888">📋 인증: 안내판 사진 + 산 이름</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 15점</span> | 난이도 ★★<br><span style="color:#999;font-size:11px">💡 안내판을 잘 살펴보세요</span></div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>❓ Quiz</b><br>Read the info board: which mountain is mentioned? Take a photo of the board as proof<br><span style="color:#888">📋 Proof: Info board photo + mountain name</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 15 pts</span> | Difficulty ★★<br><span style="color:#999;font-size:11px">💡 Look carefully at the info board</span></div>' },
+        { name: '국립현대미술관 서울관 MMCA Seoul', lat: 37.5789, lng: 126.9807, desc: '건축물 자체가 포토스팟 / 야외 조각공원', desc_en: 'The building itself is a photo spot / Outdoor sculpture garden', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🔍 미션 (Find)</b><br>미술관 마당 야외 조각 작품의 안내판에서 작품명과 작가 찾아 사진 찍기<br><span style="color:#888">📋 인증: 안내판 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 15점</span> | 난이도 ★★<br><span style="color:#999;font-size:11px">💡 마당에 야외 조각 작품이 있어요</span></div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🔍 Mission (Find)</b><br>Find an outdoor sculpture in the courtyard and photograph its title and artist from the info board<br><span style="color:#888">📋 Proof: Info board photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 15 pts</span> | Difficulty ★★<br><span style="color:#999;font-size:11px">💡 Sculptures are in the courtyard</span></div>' },
+        { name: '정독도서관 Jeongdok Public Library', lat: 37.5808, lng: 126.983, desc: '운치 좋은 도서관 정원 / 포토 명소', desc_en: 'Charming library garden / Photo spot', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 미션 (Photo)</b><br>도서관 정원에서 여유로운 휴식 사진 찍기<br><span style="color:#888">📋 인증: 정원 휴식 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 Mission (Photo)</b><br>Take a relaxing photo in the library garden<br><span style="color:#888">📋 Proof: Garden rest photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★</div>' },
+        { name: '가회동성당 Gahoe-dong Catholic Church', lat: 37.582, lng: 126.9847, desc: '북촌 한옥마을 속 서양식 성당 / 독특한 조합', desc_en: 'Western-style church among traditional hanok / Unique contrast', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>❓ 퀴즈 (Quiz)</b><br>성당 건물 정면에서 새겨진 글자 또는 설립 연도를 찾아 사진으로 인증하기<br><span style="color:#888">📋 인증: 정면 글자/연도 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 15점</span> | 난이도 ★★<br><span style="color:#999;font-size:11px">💡 성당 건물 정면을 자세히 살펴보세요</span></div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>❓ Quiz</b><br>Find the inscription or founding year on the church facade and take a photo as proof<br><span style="color:#888">📋 Proof: Facade inscription photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 15 pts</span> | Difficulty ★★<br><span style="color:#999;font-size:11px">💡 Look carefully at the church front</span></div>' },
+        { name: '감고당길 Gamgodang-gil', lat: 37.5776, lng: 126.9823, desc: '공예박물관~탬버린즈 구간 / 한옥 골목 산책로 / 율곡로3길', desc_en: 'Craft Museum to Tamburins / Hanok alley walking path / Yulgok-ro 3-gil', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 미션 (Photo)</b><br>감고당길을 따라 팀원과 함께 산책 사진 찍기<br><span style="color:#888">📋 인증: 감고당길 산책 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 Mission (Photo)</b><br>Take a walking photo with teammates along Gamgodang-gil<br><span style="color:#888">📋 Proof: Gamgodang-gil walking photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★</div>', path: [[37.5786,126.9821],[37.5778,126.9823],[37.5772,126.9825],[37.5766,126.9827]] },
+        { name: '윤보선길 Yun Boseon-gil', lat: 37.5773, lng: 126.9840, desc: '공예박물관~북촌로5길 구간 / 갤러리·한옥 거리', desc_en: 'Craft Museum to Bukchon-ro 5-gil / Gallery & hanok street', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 미션 (Photo)</b><br>윤보선길을 따라 한옥 거리 사진 찍기<br><span style="color:#888">📋 인증: 윤보선길 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 Mission (Photo)</b><br>Take a photo of the hanok street along Yun Boseon-gil<br><span style="color:#888">📋 Proof: Yun Boseon-gil photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★</div>', path: [[37.5787,126.9833],[37.5780,126.9836],[37.5774,126.9839],[37.5768,126.9841]] },
+        { name: '북촌로5나길 Bukchon-ro 5na-gil', lat: 37.5828, lng: 126.9823, desc: '북촌 한옥마을 속 아기자기한 골목길 / 포토 명소', desc_en: 'Charming alley in Bukchon hanok village / Photo spot', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 미션 (Photo)</b><br>골목길에서 한옥과 함께 인생샷 찍기<br><span style="color:#888">📋 인증: 한옥 골목 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 Mission (Photo)</b><br>Take a signature photo with hanok in the alley<br><span style="color:#888">📋 Proof: Hanok alley photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★</div>', path: [[37.5835,126.9823],[37.5829,126.9823],[37.5825,126.9822],[37.5821,126.9822]] },
+    ];
+    const spots_Souvenirs = [
+        { name: '아원공방 Ahwon Craft Workshop', lat: 37.5808, lng: 126.9805, desc: '1983년 개관 금속공예 공방 / 촛대·꽃병·악세서리 / 삼청로 소격동', desc_en: 'Metal craft workshop since 1983 / Candleholders, vases, accessories', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🔍 미션 (Find)</b><br>공방에서 가장 마음에 드는 수공예품 찾아 사진 찍기<br><span style="color:#888">📋 인증: 수공예품 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🔍 Mission (Find)</b><br>Find your favorite handcraft item and take a photo<br><span style="color:#888">📋 Proof: Handcraft item photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★</div>' },
+        { name: '오브젝트 삼청점 Object Samcheong', lat: 37.5797, lng: 126.9818, desc: '감성 문구·소품·에코백 큐레이션 숍 / 북촌로5길 6', desc_en: 'Curated stationery, accessories & eco bags / Bukchon-ro 5-gil 6', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🔍 미션 (Find)</b><br>매장에서 가장 유니크한 디자인 소품 찾아 사진 찍기<br><span style="color:#888">📋 인증: 소품 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🔍 Mission (Find)</b><br>Find the most unique design item and take a photo<br><span style="color:#888">📋 Proof: Item photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★</div>' },
+        { name: '오이뮤 북촌 OIMU Bukchon', lat: 37.5775, lng: 126.9836, desc: '전통 감성 현대 디자인 소품·인센스·문구 / 윤보선길 65 / 한글작명 체험', desc_en: 'Traditional-modern design items, incense & stationery / Korean name calligraphy experience', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🔍 미션 (Find)</b><br>매장에서 가장 한국적인 소품 찾아 사진 찍기<br><span style="color:#888">📋 인증: 소품 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🔍 Mission (Find)</b><br>Find the most Korean-style item and take a photo<br><span style="color:#888">📋 Proof: Item photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★</div>' },
+        { name: '논픽션 삼청 Nonfiction Samcheong', lat: 37.5801, lng: 126.9804, desc: '향수·바디 라이프스타일 브랜드 쇼룸 / 북촌로5길 84 / 전 아라리오 갤러리 건물', desc_en: 'Perfume & body lifestyle brand showroom / Former Arario Gallery building', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🎭 미션 (Experience)</b><br>매장에서 향수 하나 시향 후 이름과 느낌 메모하기<br><span style="color:#888">📋 인증: 향수 이름 메모 또는 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🎭 Mission (Experience)</b><br>Sample one perfume and note its name and your impression<br><span style="color:#888">📋 Proof: Perfume name memo or photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★</div>' },
+        { name: '같이서울 Gachi Seoul', lat: 37.5831, lng: 126.9832, desc: '서울 관광 기념품·소품 + 미숫가루·유자에이드 / 북촌로11라길 21', desc_en: 'Seoul tourism souvenirs & snacks / Bukchon-ro 11ra-gil 21', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🔍 미션 (Find)</b><br>매장에서 가장 한국적인 기념품 찾아 사진 찍기<br><span style="color:#888">📋 인증: 기념품 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🔍 Mission (Find)</b><br>Find the most Korean souvenir and take a photo<br><span style="color:#888">📋 Proof: Souvenir photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★</div>' },
+        { name: '빌라 에르바티움 Villa Erbatium', lat: 37.5826, lng: 126.9809, desc: '니치 향수 편집샵 / 팔판길 15 / 유럽풍 향수 큐레이션', desc_en: 'Niche perfume select shop / Palpan-gil 15 / European fragrance curation', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🎭 미션 (Experience)</b><br>매장에서 가장 마음에 드는 향수 시향 후 이름 메모하기<br><span style="color:#888">📋 인증: 향수 이름 메모 또는 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🎭 Mission (Experience)</b><br>Sample your favorite perfume and note its name<br><span style="color:#888">📋 Proof: Perfume name memo or photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★</div>' },
+        { name: '서울 서울 서울 Seoul Seoul Seoul', lat: 37.5835, lng: 126.9830, desc: '미술·공예품 숍 / 북촌로11다길 1 / 작가 핸드메이드 소품·그림·엽서', desc_en: 'Art & craft shop / Bukchon-ro 11da-gil 1 / Artist handmade items, paintings, postcards', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🔍 미션 (Find)</b><br>매장에서 가장 마음에 드는 작가 작품 사진 찍기<br><span style="color:#888">📋 인증: 작품 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🔍 Mission (Find)</b><br>Take a photo of your favorite artist work in the shop<br><span style="color:#888">📋 Proof: Artwork photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★</div>' },
+        { name: '설화수의 집 북촌 Sulwhasoo Bukchon', lat: 37.5802, lng: 126.9845, desc: '설화수 플래그십 한옥 / 북촌로 47 / K-뷰티 체험·전시·정원', desc_en: 'Sulwhasoo flagship hanok / Bukchon-ro 47 / K-beauty experience, exhibition & garden', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🎭 미션 (Experience)</b><br>설화수의 집 내부 또는 정원에서 사진 찍기<br><span style="color:#888">📋 인증: 설화수의 집 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🎭 Mission (Experience)</b><br>Take a photo inside Sulwhasoo house or in the garden<br><span style="color:#888">📋 Proof: Sulwhasoo house photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★</div>' },
+        { name: '쿠오교토 북촌한옥스토어 Quo Kyoto Bukchon', lat: 37.5816, lng: 126.9853, desc: '교토 감성 라이프스타일 숍 / 북촌로12길 (가회동) / 한옥 매장에서 일본 공예·소품', desc_en: 'Kyoto lifestyle shop / Bukchon-ro 5-gil / Japanese craft & items in hanok', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🔍 미션 (Find)</b><br>매장에서 가장 마음에 드는 소품 찾아 사진 찍기<br><span style="color:#888">📋 인증: 소품 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🔍 Mission (Find)</b><br>Find your favorite item and take a photo<br><span style="color:#888">📋 Proof: Item photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★</div>' },
+    ];
+    const spots_CafeTea = [
+        { name: '포스톤즈 삼청점 Four Stones Samcheong', lat: 37.5848, lng: 126.9817, role: 'coffee', desc: '☕ 커피 브레이크 / 대형 베이커리 카페 / 통창 뷰·루프탑 / 직접 로스팅', desc_en: '☕ Coffee Break / Large bakery cafe / Floor-to-ceiling windows & rooftop / In-house roasting', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>☕ 미션 (Break)</b><br>통창 뷰 또는 루프탑에서 팀 단체사진 찍기<br><span style="color:#888">📋 인증: 단체사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>☕ Mission (Break)</b><br>Team group photo by the panoramic window or on the rooftop<br><span style="color:#888">📋 Proof: Group photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★</div>' },
+    ];
+    const spots_Gallery = [
+        { name: '갤러리 담 Gallery DAM', lat: 37.5775, lng: 126.9836, desc: '한옥 개조 무료 갤러리 / 회화·사진·공예 전시 / 윤보선길 72', desc_en: 'Free gallery in a renovated hanok / Paintings, photos, crafts / Yun Boseon-gil 72', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 미션 (Photo)</b><br>전시 작품 중 가장 마음에 드는 것과 함께 사진 찍기<br><span style="color:#888">📋 인증: 전시 작품 + 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 Mission (Photo)</b><br>Take a photo with your favorite exhibited artwork<br><span style="color:#888">📋 Proof: Artwork + photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★</div>' },
+        { name: '국제갤러리 Kukje Gallery', lat: 37.5808, lng: 126.9805, desc: '한국 대표 상업 갤러리 / 소격동 삼청로 54', desc_en: 'Korea\'s leading commercial gallery / Sogyeok-dong Samcheong-ro 54', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 미션 (Photo)</b><br>갤러리 외관 또는 현재 전시 포스터와 함께 사진 찍기<br><span style="color:#888">📋 인증: 갤러리 외관/포스터 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 Mission (Photo)</b><br>Take a photo with the gallery exterior or current exhibition poster<br><span style="color:#888">📋 Proof: Gallery/poster photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★</div>' },
+        { name: '학고재 갤러리 Hakgojae Gallery', lat: 37.5803, lng: 126.9803, desc: '전통+현대미술 / 삼청로 50', desc_en: 'Traditional + contemporary art / Samcheong-ro 50', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 미션 (Photo)</b><br>전시 감상 후 가장 인상 깊은 작품 사진 찍기<br><span style="color:#888">📋 인증: 작품 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 Mission (Photo)</b><br>Take a photo of the most impressive artwork after viewing<br><span style="color:#888">📋 Proof: Artwork photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★</div>' },
+        { name: '서울공예박물관 Seoul Museum of Craft Art', lat: 37.5764, lng: 126.9834, role: 'start', desc: '🚩 출발지점 / 2021년 개관 / 율곡로3길 4 / 안국역 인접', desc_en: '🚩 START / Opened 2021 / Yulgok-ro 3-gil 4 / Near Anguk Stn.', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🚩 출발 (Start)</b><br>박물관 로비에서 팀 출발 단체사진 찍기<br><span style="color:#888">📋 인증: 팀 단체사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🚩 Start</b><br>Team departure group photo at the museum lobby<br><span style="color:#888">📋 Proof: Team group photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★</div>' },
+        { name: '백인제 가옥 Baek Inje House', lat: 37.5807, lng: 126.9842, desc: '1913년 건축 근대 한옥 / 북촌로7길 16 / 영화 \'암살\' 촬영지', desc_en: 'Built in 1913, modern hanok / Bukchon-ro 7-gil 16 / Film location of \'Assassination\'', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>❓ 퀴즈 (Quiz)</b><br>가옥 입구 안내판에서 건축 연도와 원래 소유자 이름을 찾아 사진 인증하기<br><span style="color:#888">📋 인증: 안내판 사진 + 정답</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 15점</span> | 난이도 ★★<br><span style="color:#999;font-size:11px">💡 안내판은 대문 옆에 있어요</span></div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>❓ Quiz</b><br>Read the info board at the entrance: find the construction year and original owner name, take a photo<br><span style="color:#888">📋 Proof: Info board photo + answer</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 15 pts</span> | Difficulty ★★<br><span style="color:#999;font-size:11px">💡 Info board is next to the main gate</span></div>' },
+        { name: '호호재 서울 Hohojae Seoul', lat: 37.5816, lng: 126.9810, desc: '한옥 갤러리 / 삼청로 71-7 (팔판동) / 2층 한옥 지붕 뷰 / 화~일 11:00-19:00 (월 휴무)', desc_en: 'Hanok gallery / Samcheong-ro 71-7 (Palpan-dong) / 2F rooftop view / Tue-Sun 11:00-19:00 (Mon closed)', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 미션 (Photo)</b><br>2층에 올라가 창문 너머 한옥 지붕 풍경 사진 찍기<br><span style="color:#888">📋 인증: 2층 뷰 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 15점</span> | 난이도 ★★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 Mission (Photo)</b><br>Go to the 2nd floor and take a photo of the hanok rooftop view<br><span style="color:#888">📋 Proof: 2F view photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 15 pts</span> | Difficulty ★★</div>' },
+        { name: '코너 갤러리 Corner Gallery', lat: 37.5795, lng: 126.9843, desc: '현대미술 전시 갤러리 / 북촌로 31-8 (재동) / 소규모 기획전', desc_en: 'Contemporary art gallery / Bukchon-ro 31-8 (Jae-dong) / Small-scale curated exhibitions', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 미션 (Photo)</b><br>갤러리 외관 또는 전시 작품과 함께 사진 찍기<br><span style="color:#888">📋 인증: 갤러리/전시 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 Mission (Photo)</b><br>Take a photo with gallery exterior or exhibited artwork<br><span style="color:#888">📋 Proof: Gallery/exhibition photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★</div>' },
+        { name: '한벽원미술관 Hanbyeokwon Art Museum', lat: 37.5828, lng: 126.9817, desc: '전통 한국화 미술관 / 삼청로 83 / 한옥 전시공간', desc_en: 'Traditional Korean painting museum / Samcheong-ro 83 / Hanok exhibition space', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 미션 (Photo)</b><br>미술관 전경 또는 전시 작품과 함께 사진 찍기<br><span style="color:#888">📋 인증: 미술관 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★</div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>📷 Mission (Photo)</b><br>Take a photo with museum exterior or exhibited artwork<br><span style="color:#888">📋 Proof: Museum photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★</div>' },
+    ];
+    const spots_Restaurants = [
+        { name: '꽃누리들밥 경복궁점 Kkotnuri Deulbap', lat: 37.5769, lng: 126.9802, role: 'lunch', desc: '🍽️ 점심 식사 / 한정식·나물 상차림 / 사간동 112 / 단체 점심 추천', desc_en: '🍽️ Lunch / Korean set meal with vegetables / Sagan-dong 112 / Recommended for group lunch', img: '', mission: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🍽️ 미션 (Lunch)</b><br>팀 전원 점심 식사 인증 단체사진 찍기<br><span style="color:#888">📋 인증: 식사 인증 사진</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10점</span> | 난이도 ★<br><span style="color:#999;font-size:11px">💡 영업시간 10:30-20:00</span></div>', mission_en: '<hr style="margin:6px 0;border:none;border-top:1px dashed #ccc"><div style="font-size:12px;line-height:1.5"><b>🍽️ Mission (Lunch)</b><br>Team lunch proof group photo with all members<br><span style="color:#888">📋 Proof: Lunch group photo</span><br><span style="color:#E74C3C;font-weight:bold">⭐ 10 pts</span> | Difficulty ★<br><span style="color:#999;font-size:11px">💡 Hours: 10:30-20:00</span></div>' },
+    ];
+    const categories = [
+        { key: 'Cafe / Tea', emoji: '☕', label: '☕ Coffee Break', color: '#8E44AD', spots: spots_CafeTea },
+        { key: 'Restaurants', emoji: '🍽️', label: '🍽️ Lunch', color: '#27AE60', spots: spots_Restaurants },
+        { key: 'Photo Spots', emoji: '📸', label: '📸 사진 Photo Spots', color: '#E74C3C', spots: spots_PhotoSpots },
+        { key: 'Souvenirs', emoji: '🎁', label: '🎁 기념품 Souvenirs', color: '#F39C12', spots: spots_Souvenirs },
+        { key: 'Gallery', emoji: '🎨', label: '🎨 갤러리/전시 Gallery', color: '#2ECC71', spots: spots_Gallery }
+    ];
+
+    // 좌표 → 타일 URL
+    function getStaticTile(lat, lng, z) {
+        z = z || 18;
+        const x = Math.floor((lng + 180) / 360 * Math.pow(2, z));
+        const r = lat * Math.PI / 180;
+        const y = Math.floor((1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * Math.pow(2, z));
+        return 'https://a.basemaps.cartocdn.com/rastertiles/voyager/' + z + '/' + x + '/' + y + '.png';
+    }
+
+    // 엑셀 넘버링 매핑
+    const spotNumberMap = {
+        '북촌 제5경 (가회동 골목길 ↓) Bukchon 5th Scenic Point': 1,
+        '북촌 제6경 (가회동 골목길 ↑) Bukchon 6th Scenic Point': 2,
+        '국립현대미술관 서울관 MMCA Seoul': 3,
+        '정독도서관 Jeongdok Public Library': 4,
+        '가회동성당 Gahoe-dong Catholic Church': 5,
+        '감고당길 Gamgodang-gil': 6,
+        '윤보선길 Yun Boseon-gil': 7,
+        '북촌로5나길 Bukchon-ro 5na-gil': 8,
+        '아원공방 Ahwon Craft Workshop': 9,
+        '오브젝트 삼청점 Object Samcheong': 10,
+        '오이뮤 북촌 OIMU Bukchon': 11,
+        '논픽션 삼청 Nonfiction Samcheong': 12,
+        '같이서울 Gachi Seoul': 13,
+        '빌라 에르바티움 Villa Erbatium': 14,
+        '서울 서울 서울 Seoul Seoul Seoul': 15,
+        '설화수의 집 북촌 Sulwhasoo Bukchon': 16,
+        '쿠오교토 북촌한옥스토어 Quo Kyoto Bukchon': 17,
+        '포스톤즈 삼청점 Four Stones Samcheong': 18,
+        '갤러리 담 Gallery DAM': 19,
+        '국제갤러리 Kukje Gallery': 20,
+        '학고재 갤러리 Hakgojae Gallery': 21,
+        '서울공예박물관 Seoul Museum of Craft Art': 22,
+        '백인제 가옥 Baek Inje House': 23,
+        '호호재 서울 Hohojae Seoul': 24,
+        '코너 갤러리 Corner Gallery': 25,
+        '한벽원미술관 Hanbyeokwon Art Museum': 26,
+        '꽃누리들밥 경복궁점 Kkotnuri Deulbap': 27
+    };
+
+    // 위키 사진 검색 (3단계 폴백)
+    const imgCache = {};
+    function getKorName(name) {
+        return name.split(/\s+/).filter(p => /[\uAC00-\uD7A3]/.test(p)).join(' ') || name;
+    }
+    function fetchPlaceImg(query, imgEl, lat, lng) {
+        const ck = query + '|' + lat + '|' + lng;
+        if (imgCache[ck] !== undefined) { if (imgCache[ck]) imgEl.src = imgCache[ck]; return; }
+        imgCache[ck] = null;
+        function setImg(url) { imgCache[ck] = url; imgEl.src = url; }
+        fetch('https://ko.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch='
+            +encodeURIComponent(query)+'&gsrlimit=1&prop=pageimages&pithumbsize=480&format=json&origin=*')
+        .then(r=>r.json()).then(d=>{
+            const p=d.query&&d.query.pages;
+            if(p){const pg=Object.values(p)[0];if(pg&&pg.thumbnail){setImg(pg.thumbnail.source);return;}}
+            return fetch('https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch='
+                +encodeURIComponent(query)+'&gsrlimit=1&prop=pageimages&pithumbsize=480&format=json&origin=*')
+            .then(r2=>r2.json()).then(d2=>{
+                const p2=d2.query&&d2.query.pages;
+                if(p2){const pg2=Object.values(p2)[0];if(pg2&&pg2.thumbnail){setImg(pg2.thumbnail.source);return;}}
+                return fetch('https://commons.wikimedia.org/w/api.php?action=query'
+                    +'&generator=geosearch&ggscoord='+lat+'|'+lng
+                    +'&ggsradius=200&ggslimit=5&ggsnamespace=6'
+                    +'&prop=imageinfo&iiprop=url&iiurlwidth=480&format=json&origin=*')
+                .then(r3=>r3.json()).then(d3=>{
+                    const p3=d3.query&&d3.query.pages;
+                    if(p3){const imgs=Object.values(p3).filter(pg=>pg.imageinfo&&pg.imageinfo[0]&&pg.imageinfo[0].thumburl&&!/\.(svg|SVG)/.test(pg.title)&&!/logo|icon|map|diagram/i.test(pg.title));
+                    if(imgs.length>0)setImg(imgs[0].imageinfo[0].thumburl);}
+                });
+            });
+        }).catch(()=>{});
+    }
+
+
+    function createIcon(color) {
+        return L.divIcon({
+            className: '',
+            html: '<svg width="14" height="20" viewBox="0 0 28 40"><path d="M14 0 C6.3 0 0 6.3 0 14 C0 24.5 14 40 14 40 C14 40 28 24.5 28 14 C28 6.3 21.7 0 14 0Z" fill="'+color+'" stroke="white" stroke-width="2"/><circle cx="14" cy="14" r="6" fill="white"/></svg>',
+            iconSize: [14, 20], iconAnchor: [7, 20], popupAnchor: [0, -18]
+        });
+    }
+    const roleIcons = {
+        start:  { emoji: '🚩', bg: '#27AE60', label: 'START' },
+        coffee: { emoji: '☕', bg: '#8E44AD', label: 'BREAK' },
+        lunch:  { emoji: '🍽️', bg: '#E67E22', label: 'LUNCH' }
+    };
+    function createRoleIcon(role) {
+        const r = roleIcons[role];
+        return L.divIcon({
+            className: '',
+            html: '<div style="display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))">' +
+                '<div style="background:'+r.bg+';color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid #fff">'+r.emoji+'</div>' +
+                '<div style="background:'+r.bg+';color:#fff;font-size:9px;font-weight:700;padding:1px 4px;border-radius:3px;margin-top:1px;white-space:nowrap;letter-spacing:.5px">'+r.label+'</div>' +
+                '<div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid '+r.bg+'"></div></div>',
+            iconSize: [32, 52], iconAnchor: [16, 52], popupAnchor: [0, -50]
+        });
+    }
+
+    const markerMap = {};
+    const allSpotRefs = []; // {s, catObj, marker, rect} for lang toggle rebuild
+
+    function buildPopHtml(s, catObj, lang) {
+        const desc = lang === 'en' ? (s.desc_en || s.desc) : s.desc;
+        const mission = lang === 'en' ? (s.mission_en || s.mission) : s.mission;
+        const numBadge = spotNumberMap[s.name] ? '<span style="background:#E74C3C;color:#fff;border-radius:4px;padding:1px 6px;font-size:11px;margin-right:6px">No.'+spotNumberMap[s.name]+'</span>' : '';
+        return '<div style="min-width:200px">'
+            + '<b style="font-size:14px;line-height:1.3;display:block;margin-bottom:3px">'+numBadge+s.name+'</b>'
+            + '<span style="color:#666;font-size:11px">'+catObj.label+'</span>'
+            + '<hr style="margin:4px 0;border:none;border-top:1px solid #eee">'
+            + '<span style="font-size:12px;line-height:1.4;display:block">'+desc+'</span>'
+            + mission
+            + '<a href="https://map.naver.com/p/search/'+encodeURIComponent(s.name.split(/\s[A-Z]/)[0])+'" target="_blank" '
+            + 'style="display:inline-block;margin-top:8px;padding:5px 10px;background:#03C75A;color:white;'
+            + 'border-radius:6px;text-decoration:none;font-size:11px">📍 네이버 지도</a>'
+            + '</div>';
+    }
+
+    function addMarkers(catObj) {
+        const defaultIcon = createIcon(catObj.color);
+        catObj.spots.forEach(s => {
+            const icon = s.role ? createRoleIcon(s.role) : defaultIcon;
+            const popHtml = buildPopHtml(s, catObj, currentLang);
+            const marker = L.marker([s.lat, s.lng], { icon })
+                .addTo(map)
+                .bindPopup(popHtml, { maxWidth: 300 });
+            markerMap[s.name] = marker;
+            let rect = null;
+            // 영역(사각형) 표시
+            if (s.area) {
+                const bounds = [[s.area[0], s.area[1]], [s.area[2], s.area[3]]];
+                rect = L.rectangle(bounds, {
+                    color: catObj.color, weight: 2, opacity: 0.8,
+                    fillColor: catObj.color, fillOpacity: 0.15,
+                    dashArray: '6,4'
+                }).addTo(map);
+                rect.bindPopup(popHtml, { maxWidth: 300 });
+                rect.on('click', function() { this.openPopup(); });
+            }
+            // 경로(폴리라인) 표시
+            if (s.path) {
+                rect = L.polyline(s.path, {
+                    color: catObj.color, weight: 4, opacity: 0.8,
+                    dashArray: '8,6'
+                }).addTo(map);
+                rect.bindPopup(popHtml, { maxWidth: 300 });
+                rect.on('click', function() { this.openPopup(); });
+            }
+            allSpotRefs.push({ s, catObj, marker, rect });
+        });
+    }
+    categories.forEach(addMarkers);
+
+    // 언어 토글 시 모든 팝업 내용 갱신
+    function refreshPopups() {
+        allSpotRefs.forEach(ref => {
+            const html = buildPopHtml(ref.s, ref.catObj, currentLang);
+            ref.marker.setPopupContent(html);
+            if (ref.rect) ref.rect.setPopupContent(html);
+        });
+    }
+
+    // 범례
+    const legend = L.control({ position: 'topright' });
+    legend.onAdd = function () {
+        const div = L.DomUtil.create('div', 'legend');
+        let h = '<h4>범례 Legend <span style="font-size:10px;color:#999;font-weight:normal">(클릭하여 펼치기)</span></h4>';
+        categories.forEach((cat, i) => {
+            const isFixed = (cat.key === 'Cafe / Tea' || cat.key === 'Restaurants');
+            h += '<div class="legend-item'+(isFixed ? '' : '"')+(!isFixed ? '" data-idx="'+i+'"' : '"')+'>'
+                + '<span class="legend-dot" style="background:'+cat.color+'"></span>'
+                + '<span>'+cat.label+'</span>';
+            if (isFixed) {
+                h += '<span class="cnt" style="font-size:11px;color:#999;margin-left:4px">— '+cat.spots[0].name+'</span>';
+                h += '</div>';
+                h += '<div class="legend-detail" data-idx="'+i+'" style="display:block;padding:2px 0 4px 26px;font-size:11.5px;line-height:1.7;color:#444">';
+                cat.spots.forEach(s => {
+                    h += '<span class="spot-link" data-name="'+s.name+'">• '+s.name+'</span>';
+                });
+                h += '</div>';
+            } else {
+                h += '<span class="cnt" style="font-size:11px;color:#999;margin-left:4px">('+cat.spots.length+')</span>'
+                    + '<span class="arrow">▶</span></div>';
+                h += '<div class="legend-detail" data-idx="'+i+'">';
+                cat.spots.forEach(s => {
+                    h += '<span class="spot-link" data-name="'+s.name+'">• '+s.name+'</span>';
+                });
+                h += '</div>';
+            }
+        });
+        div.innerHTML = h;
+        div.querySelectorAll('.legend-item[data-idx]').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const idx = this.dataset.idx;
+                const detail = div.querySelector('.legend-detail[data-idx="'+idx+'"]');
+                const isOpen = detail.classList.contains('open');
+                div.querySelectorAll('.legend-detail').forEach(d => d.classList.remove('open'));
+                div.querySelectorAll('.legend-item').forEach(i => i.classList.remove('open'));
+                if (!isOpen) { detail.classList.add('open'); this.classList.add('open'); }
+            });
+        });
+        div.querySelectorAll('.spot-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const m = markerMap[this.dataset.name];
+                if (m) { map.setView(m.getLatLng(), 17); m.openPopup(); }
+            });
+        });
+        L.DomEvent.disableClickPropagation(div);
+        L.DomEvent.disableScrollPropagation(div);
+        return div;
+    };
+    legend.addTo(map);
+
+    // 한/영 토글 버튼
+    const langControl = L.control({ position: 'topleft' });
+    langControl.onAdd = function () {
+        const btn = L.DomUtil.create('div');
+        btn.innerHTML = '<button id="lang-toggle" style="background:#fff;border:2px solid rgba(0,0,0,0.2);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.15);transition:all 0.2s">🌐 한국어 ↔ EN</button>';
+        L.DomEvent.disableClickPropagation(btn);
+        btn.querySelector('#lang-toggle').addEventListener('click', function() {
+            currentLang = currentLang === 'ko' ? 'en' : 'ko';
+            this.textContent = currentLang === 'ko' ? '🌐 한국어 ↔ EN' : '🌐 EN ↔ 한국어';
+            this.style.background = currentLang === 'en' ? '#4472C4' : '#fff';
+            this.style.color = currentLang === 'en' ? '#fff' : '#333';
+            refreshPopups();
+        });
+        return btn;
+    };
+    langControl.addTo(map);
+
+    // 마우스 좌표 표시
+    const coordDiv = document.createElement('div');
+    coordDiv.id = 'coord-display';
+    coordDiv.textContent = 'Lat: -, Lng: -';
+    document.body.appendChild(coordDiv);
+    map.on('mousemove', function(e) {
+        coordDiv.textContent = 'Lat: ' + e.latlng.lat.toFixed(4) + ', Lng: ' + e.latlng.lng.toFixed(4);
+    });
+
+    // 호버 툴팁 (데스크톱 전용)
+    categories.forEach(catObj => {
+        catObj.spots.forEach(s => {
+            const m = markerMap[s.name];
+            if (!m) return;
+            const initImg = s.img || getStaticTile(s.lat, s.lng);
+            const korQ = getKorName(s.name);
+            const tip = '<div class="hover-tip">'
+                + '<img src="'+initImg+'" class="tip-img" alt="">'
+                + '<div class="tip-info">'
+                + '<div class="tip-name">'+(spotNumberMap[s.name] ? '<span style="background:#E74C3C;color:#fff;border-radius:4px;padding:1px 5px;font-size:11px;margin-right:5px">No.'+spotNumberMap[s.name]+'</span>' : '')+s.name+'</div>'
+                + '<span class="tip-cat">'+catObj.label+'</span>'
+                + '<span class="tip-desc">'+s.desc+'</span>'
+                + '<span class="tip-coord">📍 '+s.lat.toFixed(4)+', '+s.lng.toFixed(4)+'</span>'
+                + '</div></div>';
+            m.bindTooltip(tip, { direction: 'top', offset: [0, -22], className: 'custom-tooltip', opacity: 1 });
+            if (!s.img) {
+                m.on('tooltipopen', function() {
+                    const el = this.getTooltip().getElement();
+                    if (el) {
+                        const img = el.querySelector('.tip-img');
+                        if (img && korQ) fetchPlaceImg(korQ, img, s.lat, s.lng);
+                    }
+                });
+            }
+        });
+    });
+    </script>
+</body>
+</html>
