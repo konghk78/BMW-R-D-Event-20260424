@@ -1614,7 +1614,7 @@ const map = L.map('map', { zoomControl: false, attributionControl: false })
     const legend = L.control({ position: 'topright' });
     legend.onAdd = function () {
         const div = L.DomUtil.create('div', 'legend');
-        let h = '<h4>범례1111 Legend <span style="font-size:10px;color:#999;font-weight:normal">(클릭하여 펼치기)</span></h4>';
+        let h = '<h4>범례 Legend <span style="font-size:10px;color:#999;font-weight:normal">(클릭하여 펼치기)</span></h4>';
         categories.forEach((cat, i) => {
             const isFixed = (cat.key === 'Cafe / Tea' || cat.key === 'Restaurants');
             h += '<div class="legend-item'+(isFixed ? '' : '"')+(!isFixed ? '" data-idx="'+i+'"' : '"')+'>'
