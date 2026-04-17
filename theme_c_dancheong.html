@@ -1,7 +1,7 @@
-<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Dancheong — Photo Album</title><style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Inter:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;600;700&display=swap');
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>BMW R&D — Photo Album</title><style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Noto Sans KR','Inter',sans-serif;background:#1A1A1A;color:#E8E4DF;-webkit-print-color-adjust:exact;overflow-x:hidden;}
+body{font-family:'Inter','Noto Sans KR',sans-serif;background:#0D0D0D;color:#F2F2F2;-webkit-print-color-adjust:exact;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
 .container{max-width:1100px;margin:0 auto;padding:20px;}
 
 /* BMW Roundel */
@@ -20,7 +20,7 @@ body{font-family:'Noto Sans KR','Inter',sans-serif;background:#1A1A1A;color:#E8E
 .bmw-header .bh-text{font-size:0.8em;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;}
 
 
-.fade-in{opacity:0;transform:translateY(20px);transition:opacity 0.8s cubic-bezier(.22,1,.36,1),transform 0.8s cubic-bezier(.22,1,.36,1);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity 0.9s cubic-bezier(.22,1,.36,1),transform 0.9s cubic-bezier(.22,1,.36,1);}
 .fade-in.visible{opacity:1;transform:translateY(0);}
 .stagger{opacity:0;transform:translateY(16px) scale(0.97);transition:opacity 0.5s cubic-bezier(.22,1,.36,1),transform 0.5s cubic-bezier(.22,1,.36,1);}
 .stagger.visible{opacity:1;transform:translateY(0) scale(1);}
@@ -28,149 +28,171 @@ body{font-family:'Noto Sans KR','Inter',sans-serif;background:#1A1A1A;color:#E8E
 /* Lightbox */
 #lightbox{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity 0.35s;}
 #lightbox.lb-open{pointer-events:auto;opacity:1;}
-.lb-backdrop{position:absolute;inset:0;background:rgba(10,10,10,0.94);backdrop-filter:blur(16px);}
-.lb-content{position:relative;max-width:90vw;max-height:85vh;transform:scale(0.9);transition:transform 0.4s cubic-bezier(.22,1,.36,1);}
+.lb-backdrop{position:absolute;inset:0;background:rgba(0,0,0,0.95);backdrop-filter:blur(20px);}
+.lb-content{position:relative;max-width:90vw;max-height:85vh;transform:scale(0.92);transition:transform 0.4s cubic-bezier(.22,1,.36,1);}
 #lightbox.lb-open .lb-content{transform:scale(1);}
-.lb-content img{max-width:90vw;max-height:80vh;border-radius:4px;box-shadow:0 8px 60px rgba(0,0,0,0.5);display:block;}
-.lb-cap{text-align:center;color:rgba(232,228,223,0.5);font-size:0.85em;margin-top:12px;font-weight:500;}
-.lb-close{position:absolute;top:-12px;right:-12px;width:36px;height:36px;border-radius:50%;border:none;background:rgba(194,59,34,0.6);color:white;font-size:1.4em;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+.lb-content img{max-width:90vw;max-height:80vh;border-radius:2px;box-shadow:0 12px 80px rgba(0,0,0,0.6);display:block;}
+.lb-cap{text-align:center;color:rgba(242,242,242,0.45);font-size:0.85em;margin-top:14px;font-weight:500;}
+.lb-close{position:absolute;top:-14px;right:-14px;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.06);background:rgba(0,0,0,0.8);color:white;font-size:1.3em;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);transition:border-color 0.3s;}
+.lb-close:hover{border-color:#0066B1;}
 
-.lang-toggle{position:fixed;top:16px;right:16px;z-index:9999;display:flex;border-radius:4px;overflow:hidden;font-size:0.8em;border:1px solid rgba(212,168,67,0.2);}
-.lang-btn{padding:7px 16px;border:none;cursor:pointer;font-weight:600;transition:all 0.3s;font-family:inherit;background:#242424;color:rgba(232,228,223,0.5);}
-.lang-btn.active{background:#C23B22;color:white;}
+.lang-toggle{position:fixed;top:16px;right:16px;z-index:9999;display:flex;border-radius:2px;overflow:hidden;font-size:0.78em;border:1px solid rgba(255,255,255,0.06);backdrop-filter:blur(12px);}
+.lang-btn{padding:8px 18px;border:none;cursor:pointer;font-weight:600;transition:all 0.3s;font-family:inherit;background:rgba(13,13,13,0.8);color:rgba(242,242,242,0.45);}
+.lang-btn.active{background:#0066B1;color:white;}
 .en{display:none;}
 
-/* Dancheong pattern bar */
-.dc-bar{height:8px;display:flex;width:100%;}
-.dc-bar span{flex:1;}
-.dc-bar .dc1{background:#C23B22;}.dc-bar .dc2{background:#2D6A4F;}.dc-bar .dc3{background:#1B4965;}.dc-bar .dc4{background:#D4A843;}
+/* M Stripe — BMW Motorsport DNA */
+.m-bar{height:4px;display:flex;width:100%;}
+.m-bar span{flex:1;}
+.m-bar .mb1{background:#0066B1;}
+.m-bar .mb2{background:#003A70;}
+.m-bar .mb3{background:#E2001A;}
 
 /* Cover */
-.cover{position:relative;width:100%;min-height:70vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:80px 24px;overflow:hidden;background:linear-gradient(180deg,#111 0%,#1A1A1A 100%);}
-.cover-photo{position:absolute;inset:0;background-size:cover;background-position:center;filter:saturate(0.5) brightness(0.35);}
-.cover-photo-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(26,26,26,0.3) 0%,rgba(26,26,26,0.7) 100%);}
-.cover::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30Z' fill='none' stroke='%23D4A843' stroke-width='0.5' opacity='0.06'/%3E%3C/svg%3E");pointer-events:none;z-index:1;}
-.cover-inner{position:relative;z-index:2;}
-.cover-bmw{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:32px;}
-.cover-bmw .bmw-roundel{width:52px;height:52px;filter:drop-shadow(0 2px 12px rgba(212,168,67,0.2));}
-.cover-bmw .cb-text{font-size:0.75em;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:#D4A843;}
-.cover-ornament{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:24px;}
-.cover-ornament .co-line{width:40px;height:1px;background:linear-gradient(90deg,transparent,#D4A843);}
-.cover-ornament .co-line:last-child{background:linear-gradient(90deg,#D4A843,transparent);}
-.cover-ornament .co-dot{width:6px;height:6px;border:1px solid #D4A843;transform:rotate(45deg);}
-.cover h1{font-family:'Noto Serif KR',serif;font-size:3em;font-weight:900;color:#E8E4DF;line-height:1.3;letter-spacing:-0.02em;white-space:pre-line;}
-.cover .cover-sub{font-size:0.95em;color:rgba(232,228,223,0.5);margin-top:16px;font-weight:300;letter-spacing:0.12em;}
-.cover .cover-loc{display:inline-flex;align-items:center;gap:6px;margin-top:20px;padding:6px 16px;border:1px solid rgba(212,168,67,0.25);border-radius:2px;font-size:0.75em;color:#D4A843;letter-spacing:0.15em;}
-.cover .cover-loc svg{width:12px;height:12px;fill:#D4A843;}
+.cover{position:relative;width:100%;min-height:85vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:80px 24px;overflow:hidden;background:#0D0D0D;}
+.cover-photo{position:absolute;inset:0;background-size:cover;background-position:center;filter:saturate(0.4) brightness(0.3);}
+.cover-photo-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,13,13,0.2) 0%,rgba(13,13,13,0.5) 50%,#0D0D0D 100%);}
+.cover-inner{position:relative;z-index:2;max-width:640px;}
+.cover-badge{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:40px;}
+.cover-badge .bmw-roundel{width:64px;height:64px;filter:drop-shadow(0 4px 20px rgba(0,102,177,0.25));}
+.cover-badge-text{text-align:left;}
+.cover-badge-text .cbt-title{font-size:0.7em;font-weight:800;letter-spacing:0.3em;text-transform:uppercase;color:#F2F2F2;opacity:0.9;}
+.cover-badge-text .cbt-sub{font-size:0.58em;font-weight:400;letter-spacing:0.15em;color:#1C8FE0;margin-top:2px;}
+.cover-line{width:48px;height:2px;background:#0066B1;margin:0 auto 28px;}
+.cover h1{font-family:'Noto Sans KR','Inter',sans-serif;font-size:3.4em;font-weight:900;color:#F2F2F2;line-height:1.25;letter-spacing:-0.03em;white-space:pre-line;}
+.cover h1 em{font-style:normal;color:#1C8FE0;}
+.cover .cover-sub{font-size:0.95em;color:rgba(242,242,242,0.45);margin-top:20px;font-weight:300;letter-spacing:0.05em;line-height:1.8;}
+.cover .cover-loc{display:inline-flex;align-items:center;gap:8px;margin-top:28px;padding:10px 20px;border:1px solid rgba(255,255,255,0.06);border-radius:2px;font-size:0.72em;color:rgba(242,242,242,0.6);letter-spacing:0.12em;backdrop-filter:blur(8px);background:rgba(255,255,255,0.03);}
+.cover .cover-loc svg{width:13px;height:13px;fill:#1C8FE0;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+.cover-badge{animation:fadeUp 1s cubic-bezier(.22,1,.36,1) both;}
+.cover h1{animation:fadeUp 1s 0.15s cubic-bezier(.22,1,.36,1) both;}
+.cover .cover-sub{animation:fadeUp 1s 0.3s cubic-bezier(.22,1,.36,1) both;}
+.cover .cover-loc{animation:fadeUp 1s 0.45s cubic-bezier(.22,1,.36,1) both;}
 
 /* Stats */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(212,168,67,0.15);border-bottom:1px solid rgba(212,168,67,0.15);}
-.stats .st{text-align:center;padding:28px 12px;border-right:1px solid rgba(212,168,67,0.08);}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);background:#161616;border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);}
+.stats .st{text-align:center;padding:32px 12px;border-right:1px solid rgba(255,255,255,0.06);position:relative;}
 .stats .st:last-child{border-right:none;}
-.stats .st-num{font-family:'Noto Serif KR',serif;font-size:2em;font-weight:900;color:#D4A843;}
-.stats .st-lbl{font-size:0.68em;text-transform:uppercase;letter-spacing:0.2em;color:rgba(232,228,223,0.35);margin-top:4px;}
+.stats .st-num{font-size:2.4em;font-weight:900;color:#F2F2F2;letter-spacing:-0.02em;}
+.stats .st-lbl{font-size:0.62em;text-transform:uppercase;letter-spacing:0.25em;color:rgba(242,242,242,0.45);margin-top:6px;font-weight:500;}
+.stats .st::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:2px;background:#0066B1;transition:width 0.6s cubic-bezier(.22,1,.36,1);}
+.stats .st:hover::after{width:40px;}
 
 /* Section */
-.sect{padding:56px 32px;}
-.sect-head{display:flex;align-items:center;gap:16px;margin-bottom:28px;}
-.sect-head .sh-accent{width:4px;height:32px;border-radius:2px;}
-.sect-head h2{font-family:'Noto Serif KR',serif;font-size:1.8em;font-weight:900;letter-spacing:-0.02em;}
-.sect-head .sh-sub{font-size:0.82em;color:rgba(232,228,223,0.4);font-weight:300;margin-top:2px;}
+.sect{padding:64px 32px;}
+.sect-head{display:flex;align-items:center;gap:20px;margin-bottom:32px;}
+.sect-head .sh-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1em;flex-shrink:0;}
+.sect-head .sh-title{font-size:1.6em;font-weight:800;letter-spacing:-0.02em;color:#F2F2F2;}
+.sect-head .sh-sub{font-size:0.8em;color:rgba(242,242,242,0.45);font-weight:400;margin-top:3px;letter-spacing:0.02em;}
+.sect-head .sh-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0.06),transparent);}
 
-/* Photo grid — masonry with borders */
-.photo-grid{column-count:3;column-gap:12px;padding:0;}
-.pg-item{break-inside:avoid;margin-bottom:12px;border-radius:4px;overflow:hidden;position:relative;background:#242424;border:1px solid rgba(255,255,255,0.04);transition:border-color 0.3s;}
-.pg-item:hover{border-color:rgba(212,168,67,0.2);}
-.pg-item img{width:100%;display:block;transition:transform 0.5s,filter 0.4s;filter:saturate(0.85) contrast(1.05);}
-.pg-item:hover img{transform:scale(1.04);filter:saturate(1) contrast(1);}
-.pg-item .pg-cap{padding:10px 12px;font-size:0.75em;color:rgba(232,228,223,0.5);border-top:1px solid rgba(255,255,255,0.04);}
-.pg-item .pg-cap strong{color:#D4A843;font-weight:600;}
+/* Photo grid */
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:0;}
+.pg-item{position:relative;overflow:hidden;background:#161616;aspect-ratio:4/3;}
+.pg-item:first-child{grid-column:1/-1;aspect-ratio:21/9;}
+.pg-item img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s cubic-bezier(.22,1,.36,1),filter 0.4s;filter:saturate(0.8) contrast(1.05);}
+.pg-item:hover img{transform:scale(1.05);filter:saturate(1) contrast(1);}
+.pg-item .pg-cap{position:absolute;bottom:0;left:0;right:0;padding:32px 14px 10px;background:linear-gradient(transparent,rgba(0,0,0,0.7));font-size:0.72em;color:rgba(255,255,255,0.7);opacity:0;transition:opacity 0.3s;}
+.pg-item:hover .pg-cap{opacity:1;}
+.pg-item .pg-cap strong{color:#1C8FE0;font-weight:600;}
 
 /* Hero shots */
-.hero-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 32px 24px;}
-.hero-grid .hg:first-child{grid-column:1/-1;}
-.hg{position:relative;border-radius:4px;overflow:hidden;border:1px solid rgba(255,255,255,0.05);}
-.hg:first-child{aspect-ratio:16/9;}
-.hg:not(:first-child){aspect-ratio:4/3;}
-.hg img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s;filter:saturate(0.85) contrast(1.05);}
-.hg:hover img{transform:scale(1.06);filter:saturate(1);}
-.hg .hg-label{position:absolute;bottom:0;left:0;right:0;padding:28px 14px 10px;background:linear-gradient(transparent,rgba(0,0,0,0.7));color:#E8E4DF;font-size:0.78em;font-weight:500;opacity:0;transition:opacity 0.3s;}
-.hg:hover .hg-label{opacity:1;}
+.hero-strip{display:flex;gap:4px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 32px 20px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.hero-strip::-webkit-scrollbar{display:none;}
+.hero-strip .hs{flex:0 0 auto;width:340px;scroll-snap-align:start;position:relative;border-radius:2px;overflow:hidden;aspect-ratio:4/3;}
+.hero-strip .hs:first-child{width:480px;aspect-ratio:16/9;}
+.hero-strip .hs img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s;filter:saturate(0.85) contrast(1.05);}
+.hero-strip .hs:hover img{transform:scale(1.06);filter:saturate(1);}
+.hero-strip .hs .hs-label{position:absolute;bottom:0;left:0;right:0;padding:32px 14px 12px;background:linear-gradient(transparent,rgba(0,0,0,0.7));color:rgba(255,255,255,0.85);font-size:0.78em;font-weight:500;opacity:0;transition:opacity 0.3s;}
+.hero-strip .hs:hover .hs-label{opacity:1;}
+.hero-strip .hs .hs-bmw{position:absolute;top:10px;right:10px;width:28px;height:28px;opacity:0.4;}
 
 /* Flash */
-.flash-sect{margin:0 32px;padding:36px;border:1px solid rgba(194,59,34,0.25);border-radius:4px;text-align:center;background:linear-gradient(135deg,rgba(194,59,34,0.06),rgba(212,168,67,0.06));}
-.flash-sect h3{font-family:'Noto Serif KR',serif;font-size:1.4em;font-weight:900;color:#C23B22;margin-bottom:20px;}
-.flash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;}
-.flash-grid .fg{border-radius:4px;overflow:hidden;aspect-ratio:4/3;position:relative;border:1px solid rgba(255,255,255,0.04);}
-.flash-grid .fg img{width:100%;height:100%;object-fit:cover;filter:saturate(0.85);}
-.flash-grid .fg:hover img{filter:saturate(1);}
-.flash-grid .fg .fg-tag{position:absolute;bottom:6px;right:6px;background:#C23B22;color:white;padding:2px 10px;border-radius:2px;font-size:0.65em;font-weight:600;letter-spacing:0.05em;}
+.flash-sect{margin:0 32px;padding:40px;background:#1C1C1C;border:1px solid rgba(255,255,255,0.06);border-radius:2px;text-align:center;position:relative;overflow:hidden;}
+.flash-sect::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0066B1,#003A70,#E2001A);}
+.flash-sect h3{font-size:1.3em;font-weight:800;color:#F2F2F2;margin-bottom:8px;letter-spacing:-0.01em;}
+.flash-sect .flash-sub{font-size:0.78em;color:#E2001A;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:20px;}
+.flash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:4px;}
+.flash-grid .fg{overflow:hidden;aspect-ratio:1;position:relative;}
+.flash-grid .fg img{width:100%;height:100%;object-fit:cover;filter:saturate(0.8);transition:filter 0.3s,transform 0.4s;}
+.flash-grid .fg:hover img{filter:saturate(1);transform:scale(1.06);}
+.flash-grid .fg .fg-tag{position:absolute;bottom:0;left:0;right:0;padding:20px 8px 6px;background:linear-gradient(transparent,rgba(0,0,0,0.7));color:white;font-size:0.62em;font-weight:600;letter-spacing:0.05em;}
 
-/* Team cards — dark card with accent top border */
-.team-card{margin:0 32px 16px;border-radius:4px;overflow:hidden;background:#242424;border:1px solid rgba(255,255,255,0.04);}
-.tc-top{height:3px;}
-.tc-header{display:flex;align-items:center;gap:12px;padding:16px 20px;}
-.tc-rank{font-family:'Noto Serif KR',serif;font-size:1.1em;font-weight:900;}
-.tc-name{font-size:1em;font-weight:700;color:#E8E4DF;}
-.tc-pts{margin-left:auto;font-size:0.72em;color:rgba(232,228,223,0.35);font-weight:500;letter-spacing:0.05em;}
-.tc-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:0 2px 2px;}
+/* Team cards */
+.team-card{margin:0 32px 4px;background:#161616;border:1px solid rgba(255,255,255,0.06);overflow:hidden;transition:border-color 0.3s;}
+.team-card:hover{border-color:rgba(0,102,177,0.3);}
+.tc-m-stripe{height:3px;display:flex;}.tc-m-stripe span{flex:1;}.tc-m-stripe .ms1{background:#0066B1;}.tc-m-stripe .ms2{background:#003A70;}.tc-m-stripe .ms3{background:#E2001A;}
+.tc-header{display:flex;align-items:center;gap:14px;padding:18px 24px;}
+.tc-rank{font-size:1.3em;font-weight:900;min-width:32px;}
+.tc-info{flex:1;}
+.tc-name{font-size:1em;font-weight:700;color:#F2F2F2;}
+.tc-sub{font-size:0.7em;color:rgba(242,242,242,0.45);margin-top:2px;font-weight:400;}
+.tc-pts{font-size:0.85em;font-weight:800;color:#1C8FE0;letter-spacing:0.02em;}
+.tc-photos{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;padding:0 2px 2px;}
 .tc-photos .tp{overflow:hidden;aspect-ratio:4/3;}
-.tc-photos .tp:first-child{grid-column:1/-1;aspect-ratio:16/9;}
+.tc-photos .tp:first-child{grid-column:1/3;grid-row:1/3;aspect-ratio:auto;}
 .tc-photos .tp img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s;filter:saturate(0.8);}
 .tc-photos .tp:hover img{transform:scale(1.06);filter:saturate(1);}
 
 /* Ending */
-.ending{text-align:center;padding:100px 40px 60px;position:relative;overflow:hidden;background:linear-gradient(180deg,#1A1A1A,#111);}
-.ending-photo{position:absolute;inset:0;background-size:cover;background-position:center;filter:saturate(0.4) brightness(0.3);}
-.ending-photo-overlay{position:absolute;inset:0;background:rgba(17,17,17,0.5);}
-.ending::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30Z' fill='none' stroke='%23D4A843' stroke-width='0.5' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:1;}
-.ending .bmw-roundel{width:56px;height:56px;margin:0 auto 20px;display:block;filter:drop-shadow(0 0 16px rgba(212,168,67,0.2));position:relative;z-index:2;}
-.ending-ornament{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:24px;position:relative;z-index:2;}
-.ending-ornament .eo-line{width:32px;height:1px;background:linear-gradient(90deg,transparent,#D4A843);}
-.ending-ornament .eo-line:last-child{background:linear-gradient(90deg,#D4A843,transparent);}
-.ending-ornament .eo-dot{width:5px;height:5px;border:1px solid #D4A843;transform:rotate(45deg);}
-.ending h2{font-family:'Noto Serif KR',serif;font-size:2.4em;font-weight:900;letter-spacing:-0.02em;line-height:1.4;white-space:pre-line;color:#E8E4DF;position:relative;z-index:2;}
-.ending p{font-size:0.95em;color:rgba(232,228,223,0.45);margin-top:20px;line-height:2;font-weight:300;white-space:pre-line;position:relative;z-index:2;}
-.ending .end-divider{width:40px;height:2px;background:#D4A843;margin:24px auto;position:relative;z-index:2;}
-.ending .end-loc{font-size:0.72em;color:#D4A843;letter-spacing:0.15em;margin-top:16px;position:relative;z-index:2;}
+.ending{text-align:center;padding:120px 40px 80px;position:relative;overflow:hidden;background:#0D0D0D;}
+.ending-photo{position:absolute;inset:0;background-size:cover;background-position:center;filter:saturate(0.3) brightness(0.25);}
+.ending-photo-overlay{position:absolute;inset:0;background:linear-gradient(180deg,#0D0D0D 0%,rgba(13,13,13,0.4) 40%,rgba(13,13,13,0.6) 70%,#0D0D0D 100%);}
+.ending-inner{position:relative;z-index:2;max-width:560px;margin:0 auto;}
+.ending .bmw-roundel{width:72px;height:72px;margin:0 auto 28px;display:block;filter:drop-shadow(0 0 30px rgba(0,102,177,0.3));position:relative;z-index:2;}
+.ending .e-m-stripe{display:flex;height:3px;max-width:80px;margin:0 auto 32px;overflow:hidden;border-radius:1px;position:relative;z-index:2;}
+.ending .e-m-stripe span{flex:1;}
+.ending .ems1{background:#0066B1;}.ending .ems2{background:#003A70;}.ending .ems3{background:#E2001A;}
+.ending h2{font-size:2.8em;font-weight:900;letter-spacing:-0.03em;line-height:1.3;white-space:pre-line;color:#F2F2F2;position:relative;z-index:2;}
+.ending h2 em{font-style:normal;color:#1C8FE0;}
+.ending .end-msg{font-size:0.92em;color:rgba(242,242,242,0.45);margin-top:24px;line-height:2;font-weight:300;white-space:pre-line;position:relative;z-index:2;}
+.ending .end-divider{width:40px;height:2px;background:#0066B1;margin:28px auto;position:relative;z-index:2;}
+.ending .end-loc{font-size:0.7em;color:rgba(242,242,242,0.3);letter-spacing:0.18em;text-transform:uppercase;position:relative;z-index:2;font-weight:500;}
 
-.footer{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:20px;background:#111;color:rgba(232,228,223,0.2);font-size:0.7em;letter-spacing:0.1em;}
-.footer .bmw-roundel{width:24px;height:24px;}
-.footer .bmw-foot{color:#D4A843;font-weight:600;}
-.footer .m-stripe{max-width:100px;margin:4px auto 0;height:3px;}
+.footer{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:24px;background:#080808;color:rgba(242,242,242,0.15);font-size:0.68em;letter-spacing:0.12em;font-weight:500;}
+.footer .bmw-roundel{width:28px;height:28px;}
+.footer .bmw-foot{color:#1C8FE0;font-weight:700;}
+.footer .m-stripe{max-width:80px;margin:4px auto 0;height:3px;}
 
 @media(max-width:768px){
-  .cover{min-height:60vh;padding:60px 20px;}
-  .cover h1{font-size:2.2em;}
+  .cover{min-height:70vh;padding:60px 20px;}
+  .cover h1{font-size:2.4em;}
   .stats{grid-template-columns:repeat(2,1fr);}
-  .sect{padding:40px 20px;}
-  .sect-head h2{font-size:1.5em;}
-  .photo-grid{column-count:2;column-gap:8px;}
-  .hero-grid{grid-template-columns:repeat(2,1fr);gap:8px;padding:0 20px 20px;}
-  .flash-sect{margin:0 20px;padding:24px;}
-  .flash-grid{grid-template-columns:repeat(2,1fr);}
-  .team-card{margin:0 20px 12px;}
-  .tc-photos{grid-template-columns:repeat(2,1fr);}
-  .tc-photos .tp:first-child{grid-column:1/-1;}
-  .ending h2{font-size:1.8em;}
-  .ending{padding:60px 24px 48px;}
+  .sect{padding:48px 20px;}
+  .sect-head .sh-title{font-size:1.3em;}
+  .photo-grid{grid-template-columns:repeat(2,1fr);gap:3px;}
+  .hero-strip{padding:0 20px 16px;}
+  .hero-strip .hs{width:260px;}
+  .hero-strip .hs:first-child{width:340px;}
+  .flash-sect{margin:0 20px;padding:28px;}
+  .flash-grid{grid-template-columns:repeat(3,1fr);}
+  .team-card{margin:0 20px 4px;}
+  .tc-photos{grid-template-columns:repeat(3,1fr);}
+  .tc-photos .tp:first-child{grid-column:1/2;grid-row:auto;aspect-ratio:4/3;}
+  .ending h2{font-size:2em;}
+  .ending{padding:80px 24px 60px;}
 }
 @media(max-width:480px){
-  .cover h1{font-size:1.7em;}
-  .stats{grid-template-columns:repeat(2,1fr);}
-  .stats .st-num{font-size:1.4em;}
-  .hero-grid{grid-template-columns:1fr 1fr;gap:6px;padding:0 12px 16px;}
-  .photo-grid{column-count:2;column-gap:6px;}
+  .cover h1{font-size:1.9em;}
+  .stats .st-num{font-size:1.6em;}
+  .stats .st{padding:24px 8px;}
+  .photo-grid{grid-template-columns:repeat(2,1fr);gap:2px;}
+  .pg-item:first-child{grid-column:1/-1;aspect-ratio:16/9;}
+  .hero-strip .hs{width:220px;}
+  .hero-strip .hs:first-child{width:280px;}
   .flash-sect{margin:0 12px;padding:20px;}
-  .team-card{margin:0 12px 10px;}
-  .ending h2{font-size:1.5em;}
+  .flash-grid{grid-template-columns:repeat(2,1fr);}
+  .team-card{margin:0 12px 3px;}
+  .tc-photos{grid-template-columns:repeat(2,1fr);}
+  .ending h2{font-size:1.6em;}
 }</style></head><body>
 <div class="lang-toggle"><button class="lang-btn active" data-lang="ko">한국어</button><button class="lang-btn" data-lang="en">English</button></div>
-<div class="dc-bar"><span class="dc1"></span><span class="dc2"></span><span class="dc3"></span><span class="dc4"></span></div>
-<div class="cover fade-in">
+<div class="m-bar"><span class="mb1"></span><span class="mb2"></span><span class="mb3"></span></div>
+<div class="cover">
   <div class="cover-photo" style="background-image:url('https://picsum.photos/seed/t1/1200/800')"></div><div class="cover-photo-overlay"></div>
   <div class="cover-inner">
-  <div class="cover-bmw"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="bmw-roundel">
+    <div class="cover-badge"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="bmw-roundel">
   <circle cx="50" cy="50" r="49" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
   <circle cx="50" cy="50" r="48" fill="#1a1a1a"/>
   <circle cx="50" cy="50" r="37" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.2"/>
@@ -178,113 +200,115 @@ body{font-family:'Noto Sans KR','Inter',sans-serif;background:#1A1A1A;color:#E8E
   <path d="M50 14 A36 36 0 0 1 86 50 L50 50 Z" fill="#0066B1"/>
   <path d="M50 86 A36 36 0 0 1 14 50 L50 50 Z" fill="#0066B1"/>
   <text x="50" y="11" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="8.5" fill="white" letter-spacing="2.5">BMW</text>
-</svg><div class="cb-text">R&D Workshop</div></div>
-  <div class="cover-ornament"><div class="co-line"></div><div class="co-dot"></div><div class="co-line"></div></div>
-  <h1><span class="ko">담장 너머의
-우리 이야기</span><span class="en">Our Story
-Beyond the Palace Walls</span></h1>
-  <div class="cover-sub"><span class="ko">경복궁과 삼청동을 거닐며 함께한 하루</span><span class="en">A day walking together through palaces and alleys</span></div>
-  <div class="cover-loc"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span class="ko">삼청동 · 경복궁</span><span class="en">Samcheong-dong · Gyeongbok Palace</span></div>
-</div></div>
+</svg><div class="cover-badge-text"><div class="cbt-title">BMW Group</div><div class="cbt-sub">R&D Workshop 2026</div></div></div>
+    <div class="cover-line"></div>
+    <h1><span class="ko">함께 만든
+<em>오늘</em>의 기록</span><span class="en">The Record of
+<em>Today</em> We Made</span></h1>
+    <div class="cover-sub"><span class="ko">경복궁과 삼청동을 거닐며 함께한 하루의 이야기</span><span class="en">Stories from a day walking together through palaces and alleys</span></div>
+    <div class="cover-loc"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span class="ko">삼청동 · 경복궁 · 2026.04</span><span class="en">Samcheong-dong · Gyeongbok Palace · Apr 2026</span></div>
+  </div>
+</div>
 <div class="stats">
   <div class="st"><div class="st-num count-up" data-count="6">0</div><div class="st-lbl"><span class="ko">팀</span><span class="en">Teams</span></div></div>
-  <div class="st"><div class="st-num count-up" data-count="126">0</div><div class="st-lbl"><span class="ko">사진</span><span class="en">Photos</span></div></div>
+  <div class="st"><div class="st-num count-up" data-count="131">0</div><div class="st-lbl"><span class="ko">사진</span><span class="en">Photos</span></div></div>
   <div class="st"><div class="st-num count-up" data-count="29">0</div><div class="st-lbl"><span class="ko">미션</span><span class="en">Missions</span></div></div>
   <div class="st"><div class="st-num count-up" data-count="34">0</div><div class="st-lbl"><span class="ko">참가자</span><span class="en">People</span></div></div>
 </div>
-<div class="container"><div class="sect fade-in"><div class="sect-head"><div class="sh-accent" style="background:#D4A843;"></div><div><h2><span class="ko">오늘의 주인공들</span><span class="en">Today's Stars</span></h2><div class="sh-sub"><span class="ko">각 팀의 베스트 한 컷</span><span class="en">The best shot from each team</span></div></div></div></div>
-<div class="hero-grid">
-<div class="hg stagger" data-lightbox data-caption="불꽃 · 계단 사진"><img src="https://picsum.photos/seed/t30/800/600"><div class="hg-label">불꽃 · 계단 사진</div></div>
-<div class="hg stagger" data-lightbox data-caption="불사조 · 팀 단체 셀카"><img src="https://picsum.photos/seed/t5/800/600"><div class="hg-label">불사조 · 팀 단체 셀카</div></div>
-<div class="hg stagger" data-lightbox data-caption="태풍 · 동상 사진"><img src="https://picsum.photos/seed/t46/800/600"><div class="hg-label">태풍 · 동상 사진</div></div>
-<div class="hg stagger" data-lightbox data-caption="하늘 · 건물 전경"><img src="https://picsum.photos/seed/t55/800/600"><div class="hg-label">하늘 · 건물 전경</div></div>
-<div class="hg stagger" data-lightbox data-caption="독수리 · 그림자 사진"><img src="https://picsum.photos/seed/t22/800/600"><div class="hg-label">독수리 · 그림자 사진</div></div>
+<div class="container"><div class="sect fade-in"><div class="sect-head"><div class="sh-icon" style="background:#0066B115;color:#1C8FE0;">★</div><div><div class="sh-title"><span class="ko">오늘의 주인공들</span><span class="en">Today's Stars</span></div><div class="sh-sub"><span class="ko">각 팀의 베스트 한 컷</span><span class="en">The best shot from each team</span></div></div><div class="sh-line"></div></div></div>
+<div class="hero-strip">
+<div class="hs stagger" data-lightbox data-caption="불꽃 · 숫자 만들기"><img src="https://picsum.photos/seed/t65/800/600"><div class="hs-label">불꽃 · 숫자 만들기</div></div>
+<div class="hs stagger" data-lightbox data-caption="하늘 · 나무와 함께"><img src="https://picsum.photos/seed/t17/800/600"><div class="hs-label">하늘 · 나무와 함께</div></div>
+<div class="hs stagger" data-lightbox data-caption="태풍 · 뒷모습 사진"><img src="https://picsum.photos/seed/t68/800/600"><div class="hs-label">태풍 · 뒷모습 사진</div></div>
+<div class="hs stagger" data-lightbox data-caption="불사조 · 그림자 사진"><img src="https://picsum.photos/seed/t21/800/600"><div class="hs-label">불사조 · 그림자 사진</div></div>
+<div class="hs stagger" data-lightbox data-caption="독수리 · 마지막 단체사진"><img src="https://picsum.photos/seed/t111/800/600"><div class="hs-label">독수리 · 마지막 단체사진</div></div>
 </div>
-<div class="sect fade-in"><div class="sect-head"><div class="sh-accent" style="background:#2D6A4F;"></div><div><h2><span class="ko">오전 — 궁과 골목 사이</span><span class="en">Morning — Between Palace & Alleys</span></h2><div class="sh-sub"><span class="ko">삼청동 돌담길을 따라 걷다</span><span class="en">Walking along the stone walls</span></div></div></div></div>
+<div class="sect fade-in"><div class="sect-head"><div class="sh-icon" style="background:rgba(0,58,112,0.15);color:#1C8FE0;">☀</div><div><div class="sh-title"><span class="ko">오전 — 궁과 골목 사이</span><span class="en">Morning — Between Palace & Alleys</span></div><div class="sh-sub"><span class="ko">삼청동 돌담길을 따라 걷다</span><span class="en">Walking along the stone walls</span></div></div><div class="sh-line"></div></div></div>
 <div class="photo-grid" style="padding:0 32px;">
-<div class="pg-item stagger" data-lightbox data-caption="독수리 · 나무와 함께"><img src="https://picsum.photos/seed/t17/800/600"><div class="pg-cap"><strong>독수리</strong> · 나무와 함께</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="불사조 · 간판 찾기"><img src="https://picsum.photos/seed/t41/800/600"><div class="pg-cap"><strong>불사조</strong> · 간판 찾기</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="번개 · 팀 단체 셀카"><img src="https://picsum.photos/seed/t4/800/600"><div class="pg-cap"><strong>번개</strong> · 팀 단체 셀카</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="불꽃 · 나무와 함께"><img src="https://picsum.photos/seed/t19/800/600"><div class="pg-cap"><strong>불꽃</strong> · 나무와 함께</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="하늘 · 간판 찾기"><img src="https://picsum.photos/seed/t40/800/600"><div class="pg-cap"><strong>하늘</strong> · 간판 찾기</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="번개 · 건물 전경"><img src="https://picsum.photos/seed/t56/800/600"><div class="pg-cap"><strong>번개</strong> · 건물 전경</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="불사조 · 건물 전경"><img src="https://picsum.photos/seed/t57/800/600"><div class="pg-cap"><strong>불사조</strong> · 건물 전경</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="불사조 · 하트 만들기"><img src="https://picsum.photos/seed/t15/800/600"><div class="pg-cap"><strong>불사조</strong> · 하트 만들기</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="태풍 · 빨간 음료"><img src="https://picsum.photos/seed/t6/800/600"><div class="pg-cap"><strong>태풍</strong> · 빨간 음료</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="하늘 · 빨간 음료"><img src="https://picsum.photos/seed/t9/800/600"><div class="pg-cap"><strong>하늘</strong> · 빨간 음료</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="하늘 · 계단 사진"><img src="https://picsum.photos/seed/t33/800/600"><div class="pg-cap"><strong>하늘</strong> · 계단 사진</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="하늘 · 벤치 사진"><img src="https://picsum.photos/seed/t27/800/600"><div class="pg-cap"><strong>하늘</strong> · 벤치 사진</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="불꽃 · 계단 사진"><img src="https://picsum.photos/seed/t32/800/600"><div class="pg-cap"><strong>불꽃</strong> · 계단 사진</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="하늘 · 하트 만들기"><img src="https://picsum.photos/seed/t12/800/600"><div class="pg-cap"><strong>하늘</strong> · 하트 만들기</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="불사조 · 그림자 사진"><img src="https://picsum.photos/seed/t21/800/600"><div class="pg-cap"><strong>불사조</strong> · 그림자 사진</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="하늘 · 나무와 함께"><img src="https://picsum.photos/seed/t17/800/600"><div class="pg-cap"><strong>하늘</strong> · 나무와 함께</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="불사조 · 건물 전경"><img src="https://picsum.photos/seed/t53/800/600"><div class="pg-cap"><strong>불사조</strong> · 건물 전경</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="독수리 · 계단 사진"><img src="https://picsum.photos/seed/t34/800/600"><div class="pg-cap"><strong>독수리</strong> · 계단 사진</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="태풍 · 계단 사진"><img src="https://picsum.photos/seed/t31/800/600"><div class="pg-cap"><strong>태풍</strong> · 계단 사진</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="독수리 · 나무와 함께"><img src="https://picsum.photos/seed/t19/800/600"><div class="pg-cap"><strong>독수리</strong> · 나무와 함께</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="번개 · 그림자 사진"><img src="https://picsum.photos/seed/t20/800/600"><div class="pg-cap"><strong>번개</strong> · 그림자 사진</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="불사조 · 계단 사진"><img src="https://picsum.photos/seed/t33/800/600"><div class="pg-cap"><strong>불사조</strong> · 계단 사진</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="번개 · 빨간 음료"><img src="https://picsum.photos/seed/t6/800/600"><div class="pg-cap"><strong>번개</strong> · 빨간 음료</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="독수리 · 점프 사진"><img src="https://picsum.photos/seed/t37/800/600"><div class="pg-cap"><strong>독수리</strong> · 점프 사진</div></div>
 </div>
-<div style="padding:40px 0;"><div class="flash-sect fade-in"><h3><span class="ko">⚡ 돌발 미션!</span><span class="en">⚡ Flash Missions!</span></h3><div class="flash-grid">
-<div class="fg stagger" data-lightbox data-caption="하늘"><img src="https://picsum.photos/seed/t118/800/600"><div class="fg-tag">하늘</div></div>
-<div class="fg stagger" data-lightbox data-caption="하늘"><img src="https://picsum.photos/seed/t5/800/600"><div class="fg-tag">하늘</div></div>
-<div class="fg stagger" data-lightbox data-caption="불꽃"><img src="https://picsum.photos/seed/t117/800/600"><div class="fg-tag">불꽃</div></div>
-<div class="fg stagger" data-lightbox data-caption="불사조"><img src="https://picsum.photos/seed/t1/800/600"><div class="fg-tag">불사조</div></div>
-<div class="fg stagger" data-lightbox data-caption="하늘"><img src="https://picsum.photos/seed/t120/800/600"><div class="fg-tag">하늘</div></div>
-<div class="fg stagger" data-lightbox data-caption="독수리"><img src="https://picsum.photos/seed/t114/800/600"><div class="fg-tag">독수리</div></div>
-<div class="fg stagger" data-lightbox data-caption="불사조"><img src="https://picsum.photos/seed/t115/800/600"><div class="fg-tag">불사조</div></div>
-<div class="fg stagger" data-lightbox data-caption="불사조"><img src="https://picsum.photos/seed/t3/800/600"><div class="fg-tag">불사조</div></div>
+<div style="padding:48px 0;"><div class="flash-sect fade-in"><h3><span class="ko">돌발 미션</span><span class="en">Flash Missions</span></h3><div class="flash-sub"><span class="ko">⚡ SUDDEN CHALLENGE</span><span class="en">⚡ SUDDEN CHALLENGE</span></div><div class="flash-grid">
+<div class="fg stagger" data-lightbox data-caption="번개"><img src="https://picsum.photos/seed/t8/800/600"><div class="fg-tag">번개</div></div>
+<div class="fg stagger" data-lightbox data-caption="번개"><img src="https://picsum.photos/seed/t4/800/600"><div class="fg-tag">번개</div></div>
+<div class="fg stagger" data-lightbox data-caption="하늘"><img src="https://picsum.photos/seed/t11/800/600"><div class="fg-tag">하늘</div></div>
+<div class="fg stagger" data-lightbox data-caption="하늘"><img src="https://picsum.photos/seed/t115/800/600"><div class="fg-tag">하늘</div></div>
+<div class="fg stagger" data-lightbox data-caption="불꽃"><img src="https://picsum.photos/seed/t1/800/600"><div class="fg-tag">불꽃</div></div>
+<div class="fg stagger" data-lightbox data-caption="번개"><img src="https://picsum.photos/seed/t114/800/600"><div class="fg-tag">번개</div></div>
+<div class="fg stagger" data-lightbox data-caption="태풍"><img src="https://picsum.photos/seed/t118/800/600"><div class="fg-tag">태풍</div></div>
+<div class="fg stagger" data-lightbox data-caption="독수리"><img src="https://picsum.photos/seed/t120/800/600"><div class="fg-tag">독수리</div></div>
 </div></div></div>
-<div class="sect fade-in"><div class="sect-head"><div class="sh-accent" style="background:#1B4965;"></div><div><h2><span class="ko">오후 — 기울어가는 빛</span><span class="en">Afternoon — Fading Light</span></h2><div class="sh-sub"><span class="ko">노을빛이 담장을 물들이다</span><span class="en">Sunset painting the walls</span></div></div></div></div>
+<div class="sect fade-in"><div class="sect-head"><div class="sh-icon" style="background:rgba(226,0,26,0.1);color:#E2001A;">◐</div><div><div class="sh-title"><span class="ko">오후 — 기울어가는 빛</span><span class="en">Afternoon — Fading Light</span></div><div class="sh-sub"><span class="ko">노을빛이 담장을 물들이다</span><span class="en">Sunset painting the walls</span></div></div><div class="sh-line"></div></div></div>
 <div class="photo-grid" style="padding:0 32px;">
-<div class="pg-item stagger" data-lightbox data-caption="번개 · 마지막 단체사진"><img src="https://picsum.photos/seed/t109/800/600"><div class="pg-cap"><strong>번개</strong> · 마지막 단체사진</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="번개 · 자전거 사진"><img src="https://picsum.photos/seed/t98/800/600"><div class="pg-cap"><strong>번개</strong> · 자전거 사진</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="하늘 · 바람개비 사진"><img src="https://picsum.photos/seed/t101/800/600"><div class="pg-cap"><strong>하늘</strong> · 바람개비 사진</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="독수리 · 최고 높은 곳"><img src="https://picsum.photos/seed/t89/800/600"><div class="pg-cap"><strong>독수리</strong> · 최고 높은 곳</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="번개 · 바람개비 사진"><img src="https://picsum.photos/seed/t103/800/600"><div class="pg-cap"><strong>번개</strong> · 바람개비 사진</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="번개 · 거울 사진"><img src="https://picsum.photos/seed/t80/800/600"><div class="pg-cap"><strong>번개</strong> · 거울 사진</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="하늘 · 최고 높은 곳"><img src="https://picsum.photos/seed/t92/800/600"><div class="pg-cap"><strong>하늘</strong> · 최고 높은 곳</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="독수리 · 분수대 사진"><img src="https://picsum.photos/seed/t59/800/600"><div class="pg-cap"><strong>독수리</strong> · 분수대 사진</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="불꽃 · 음식 사진"><img src="https://picsum.photos/seed/t74/800/600"><div class="pg-cap"><strong>불꽃</strong> · 음식 사진</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="태풍 · 뒷모습 사진"><img src="https://picsum.photos/seed/t68/800/600"><div class="pg-cap"><strong>태풍</strong> · 뒷모습 사진</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="번개 · 분수대 사진"><img src="https://picsum.photos/seed/t61/800/600"><div class="pg-cap"><strong>번개</strong> · 분수대 사진</div></div>
-<div class="pg-item stagger" data-lightbox data-caption="불꽃 · 거울 사진"><img src="https://picsum.photos/seed/t83/800/600"><div class="pg-cap"><strong>불꽃</strong> · 거울 사진</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="불꽃 · 최고 높은 곳"><img src="https://picsum.photos/seed/t92/800/600"><div class="pg-cap"><strong>불꽃</strong> · 최고 높은 곳</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="태풍 · 최고 높은 곳"><img src="https://picsum.photos/seed/t91/800/600"><div class="pg-cap"><strong>태풍</strong> · 최고 높은 곳</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="독수리 · 음식 사진"><img src="https://picsum.photos/seed/t71/800/600"><div class="pg-cap"><strong>독수리</strong> · 음식 사진</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="태풍 · 숫자 만들기"><img src="https://picsum.photos/seed/t63/800/600"><div class="pg-cap"><strong>태풍</strong> · 숫자 만들기</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="태풍 · 음식 사진"><img src="https://picsum.photos/seed/t75/800/600"><div class="pg-cap"><strong>태풍</strong> · 음식 사진</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="태풍 · 자전거 사진"><img src="https://picsum.photos/seed/t101/800/600"><div class="pg-cap"><strong>태풍</strong> · 자전거 사진</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="독수리 · 손 모아 사진"><img src="https://picsum.photos/seed/t76/800/600"><div class="pg-cap"><strong>독수리</strong> · 손 모아 사진</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="하늘 · 거울 사진"><img src="https://picsum.photos/seed/t81/800/600"><div class="pg-cap"><strong>하늘</strong> · 거울 사진</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="독수리 · 분수대 사진"><img src="https://picsum.photos/seed/t60/800/600"><div class="pg-cap"><strong>독수리</strong> · 분수대 사진</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="불사조 · 자전거 사진"><img src="https://picsum.photos/seed/t98/800/600"><div class="pg-cap"><strong>불사조</strong> · 자전거 사진</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="독수리 · 최고 높은 곳"><img src="https://picsum.photos/seed/t90/800/600"><div class="pg-cap"><strong>독수리</strong> · 최고 높은 곳</div></div>
+<div class="pg-item stagger" data-lightbox data-caption="번개 · 자전거 사진"><img src="https://picsum.photos/seed/t99/800/600"><div class="pg-cap"><strong>번개</strong> · 자전거 사진</div></div>
 </div>
-<div class="sect fade-in"><div class="sect-head"><div class="sh-accent" style="background:#C23B22;"></div><div><h2><span class="ko">팀별 베스트컷</span><span class="en">Team Best Shots</span></h2></div></div></div>
-<div class="team-card fade-in"><div class="tc-top" style="background:#C23B22;"></div><div class="tc-header"><div class="tc-rank" style="color:#C23B22;">🥇</div><div class="tc-name">불꽃</div><div class="tc-pts">294pts</div></div><div class="tc-photos">
-<div class="tp"><img src="https://picsum.photos/seed/t30/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t75/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t24/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t100/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t117/800/600"></div>
-</div></div>
-<div class="team-card fade-in"><div class="tc-top" style="background:#2D6A4F;"></div><div class="tc-header"><div class="tc-rank" style="color:#2D6A4F;">🥈</div><div class="tc-name">불사조</div><div class="tc-pts">291pts</div></div><div class="tc-photos">
-<div class="tp"><img src="https://picsum.photos/seed/t5/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t62/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t111/800/600"></div>
+<div class="sect fade-in"><div class="sect-head"><div class="sh-icon" style="background:#0066B115;color:#1C8FE0;">🏆</div><div><div class="sh-title"><span class="ko">팀별 베스트컷</span><span class="en">Team Best Shots</span></div><div class="sh-sub"><span class="ko">각 팀의 순위와 하이라이트</span><span class="en">Rankings & highlights by team</span></div></div><div class="sh-line"></div></div></div>
+<div class="team-card fade-in"><div class="tc-m-stripe"><span class="ms1"></span><span class="ms2"></span><span class="ms3"></span></div><div class="tc-header"><div class="tc-rank" style="color:#0066B1;">🥇</div><div class="tc-info"><div class="tc-name">불꽃</div><div class="tc-sub">5 <span class="ko">장의 베스트</span><span class="en">best shots</span></div></div><div class="tc-pts">289<span style="font-size:0.7em;opacity:0.5;"> pts</span></div></div><div class="tc-photos">
+<div class="tp"><img src="https://picsum.photos/seed/t65/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t87/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t32/800/600"></div>
 <div class="tp"><img src="https://picsum.photos/seed/t1/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t81/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t67/800/600"></div>
 </div></div>
-<div class="team-card fade-in"><div class="tc-top" style="background:#1B4965;"></div><div class="tc-header"><div class="tc-rank" style="color:#1B4965;">🥉</div><div class="tc-name">태풍</div><div class="tc-pts">290pts</div></div><div class="tc-photos">
-<div class="tp"><img src="https://picsum.photos/seed/t46/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t95/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t13/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t1/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t60/800/600"></div>
-</div></div>
-<div class="team-card fade-in"><div class="tc-top" style="background:#D4A843;"></div><div class="tc-header"><div class="tc-rank" style="color:#D4A843;">#4</div><div class="tc-name">하늘</div><div class="tc-pts">244pts</div></div><div class="tc-photos">
-<div class="tp"><img src="https://picsum.photos/seed/t55/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t118/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t5/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t99/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t120/800/600"></div>
-</div></div>
-<div class="team-card fade-in"><div class="tc-top" style="background:#8B5E3C;"></div><div class="tc-header"><div class="tc-rank" style="color:#8B5E3C;">#5</div><div class="tc-name">독수리</div><div class="tc-pts">182pts</div></div><div class="tc-photos">
-<div class="tp"><img src="https://picsum.photos/seed/t22/800/600"></div>
+<div class="team-card fade-in"><div class="tc-header"><div class="tc-rank" style="color:#E2001A;">🥈</div><div class="tc-info"><div class="tc-name">하늘</div><div class="tc-sub">5 <span class="ko">장의 베스트</span><span class="en">best shots</span></div></div><div class="tc-pts">282<span style="font-size:0.7em;opacity:0.5;"> pts</span></div></div><div class="tc-photos">
 <div class="tp"><img src="https://picsum.photos/seed/t17/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t89/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t96/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t63/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t46/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t11/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t115/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t73/800/600"></div>
 </div></div>
-<div class="team-card fade-in"><div class="tc-top" style="background:#5C6B73;"></div><div class="tc-header"><div class="tc-rank" style="color:#5C6B73;">#6</div><div class="tc-name">번개</div><div class="tc-pts">180pts</div></div><div class="tc-photos">
-<div class="tp"><img src="https://picsum.photos/seed/t29/800/600"></div>
+<div class="team-card fade-in"><div class="tc-header"><div class="tc-rank" style="color:#003A70;">🥉</div><div class="tc-info"><div class="tc-name">태풍</div><div class="tc-sub">5 <span class="ko">장의 베스트</span><span class="en">best shots</span></div></div><div class="tc-pts">264<span style="font-size:0.7em;opacity:0.5;"> pts</span></div></div><div class="tc-photos">
+<div class="tp"><img src="https://picsum.photos/seed/t68/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t102/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t77/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t11/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t38/800/600"></div>
+</div></div>
+<div class="team-card fade-in"><div class="tc-header"><div class="tc-rank" style="color:#1C8FE0;">#4</div><div class="tc-info"><div class="tc-name">불사조</div><div class="tc-sub">5 <span class="ko">장의 베스트</span><span class="en">best shots</span></div></div><div class="tc-pts">237<span style="font-size:0.7em;opacity:0.5;"> pts</span></div></div><div class="tc-photos">
 <div class="tp"><img src="https://picsum.photos/seed/t21/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t72/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t34/800/600"></div>
-<div class="tp"><img src="https://picsum.photos/seed/t109/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t78/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t33/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t98/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t57/800/600"></div>
+</div></div>
+<div class="team-card fade-in"><div class="tc-header"><div class="tc-rank" style="color:#003A70;">#5</div><div class="tc-info"><div class="tc-name">독수리</div><div class="tc-sub">5 <span class="ko">장의 베스트</span><span class="en">best shots</span></div></div><div class="tc-pts">210<span style="font-size:0.7em;opacity:0.5;"> pts</span></div></div><div class="tc-photos">
+<div class="tp"><img src="https://picsum.photos/seed/t111/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t42/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t7/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t86/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t100/800/600"></div>
+</div></div>
+<div class="team-card fade-in"><div class="tc-header"><div class="tc-rank" style="color:#0066B1;">#6</div><div class="tc-info"><div class="tc-name">번개</div><div class="tc-sub">5 <span class="ko">장의 베스트</span><span class="en">best shots</span></div></div><div class="tc-pts">195<span style="font-size:0.7em;opacity:0.5;"> pts</span></div></div><div class="tc-photos">
+<div class="tp"><img src="https://picsum.photos/seed/t55/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t74/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t103/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t113/800/600"></div>
+<div class="tp"><img src="https://picsum.photos/seed/t8/800/600"></div>
 </div></div>
 </div><div class="ending fade-in">
   <div class="ending-photo" style="background-image:url('https://picsum.photos/seed/t1/1200/800')"></div><div class="ending-photo-overlay"></div>
+  <div class="ending-inner">
   <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="bmw-roundel">
   <circle cx="50" cy="50" r="49" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
   <circle cx="50" cy="50" r="48" fill="#1a1a1a"/>
@@ -294,23 +318,20 @@ Beyond the Palace Walls</span></h1>
   <path d="M50 86 A36 36 0 0 1 14 50 L50 50 Z" fill="#0066B1"/>
   <text x="50" y="11" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="8.5" fill="white" letter-spacing="2.5">BMW</text>
 </svg>
-  <div class="ending-ornament"><div class="eo-line"></div><div class="eo-dot"></div><div class="eo-line"></div></div>
-  <h2><span class="ko">담장 너머,
-함께여서 빛났다</span><span class="en">Beyond the Walls,
-Bright Because of Us</span></h2>
+  <div class="e-m-stripe"><span class="ems1"></span><span class="ems2"></span><span class="ems3"></span></div>
+  <h2><span class="ko">고생했어,
+<em>우리</em>.</span><span class="en">Great work,
+<em>team</em>.</span></h2>
   <div class="end-divider"></div>
-  <p><span class="ko">경복궁 처마 아래 피어난 웃음
+  <div class="end-msg"><span class="ko">경복궁 처마 아래 피어난 웃음
 삼청동 골목에서 나눈 이야기
-이 봄의 기억이 우리를 더 단단하게
-
-수고했어요, 우리 🏛️</span><span class="en">Laughter under the palace eaves
+이 봄의 기억이 우리를 더 단단하게</span><span class="en">Laughter under the palace eaves
 Stories shared in Samcheong alleys
-This spring's memories make us stronger
-
-Great work, team 🏛️</span></p>
-  <div class="end-loc"><span class="ko">📍 삼청동 · 경복궁 · 2026년 4월</span><span class="en">📍 Samcheong-dong · Gyeongbok Palace · April 2026</span></div>
+This spring's memories make us stronger</span></div>
+  <div class="end-loc"><span class="ko">삼청동 · 경복궁 · 2026년 4월</span><span class="en">Samcheong-dong · Gyeongbok Palace · April 2026</span></div>
+  </div>
 </div>
-<div class="dc-bar"><span class="dc1"></span><span class="dc2"></span><span class="dc3"></span><span class="dc4"></span></div>
+<div class="m-bar"><span class="mb1"></span><span class="mb2"></span><span class="mb3"></span></div>
 <div class="footer"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="bmw-roundel">
   <circle cx="50" cy="50" r="49" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
   <circle cx="50" cy="50" r="48" fill="#1a1a1a"/>
@@ -319,7 +340,7 @@ Great work, team 🏛️</span></p>
   <path d="M50 14 A36 36 0 0 1 86 50 L50 50 Z" fill="#0066B1"/>
   <path d="M50 86 A36 36 0 0 1 14 50 L50 50 Z" fill="#0066B1"/>
   <text x="50" y="11" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="8.5" fill="white" letter-spacing="2.5">BMW</text>
-</svg><span class="bmw-foot">BMW R&D</span> · Dancheong · Photo Album · 2026년 4월 · 삼청동, 경복궁<div class="m-stripe"><span class="ms ms-1"></span><span class="ms ms-2"></span><span class="ms ms-3"></span></div></div>
+</svg><span class="bmw-foot">BMW Group R&D</span> · Photo Album · 2026년 4월 · 삼청동, 경복궁<div class="m-stripe"><span class="ms ms-1"></span><span class="ms ms-2"></span><span class="ms ms-3"></span></div></div>
 <script>
 (function(){
   function setLang(l){

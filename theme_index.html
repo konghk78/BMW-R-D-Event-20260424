@@ -1,0 +1,70 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>포토앨범 테마 선택 | BMW R&D Workshop</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;600;800&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans KR','Inter',sans-serif;background:#0f0f14;color:white;min-height:100vh;}
+.bmw-bar{display:flex;align-items:center;justify-content:center;gap:14px;padding:18px 24px;background:#262626;border-bottom:1px solid rgba(255,255,255,0.06);}
+.bmw-bar svg{width:42px;height:42px;filter:drop-shadow(0 2px 8px rgba(0,102,177,0.3));}
+.bmw-bar .bar-text{font-size:0.85em;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.8);}
+.m-bar{display:flex;height:4px;width:100%;}
+.m-bar span{flex:1;}.m-bar .mb1{background:#0066B1;}.m-bar .mb2{background:#003A70;}.m-bar .mb3{background:#E2001A;}
+.page{max-width:900px;margin:0 auto;padding:60px 24px;}
+h1{font-size:2.4em;font-weight:900;text-align:center;letter-spacing:-0.03em;margin-bottom:8px;}
+.sub{text-align:center;font-size:0.95em;color:rgba(255,255,255,0.45);margin-bottom:48px;font-weight:300;}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;}
+.card{border-radius:20px;overflow:hidden;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);transition:transform 0.3s,border-color 0.3s,box-shadow 0.3s;cursor:pointer;text-decoration:none;color:white;display:block;}
+.card:hover{transform:translateY(-6px);border-color:rgba(0,102,177,0.4);box-shadow:0 12px 40px rgba(0,102,177,0.15);}
+.card-img{height:200px;position:relative;overflow:hidden;}
+.card-img .bg{width:100%;height:100%;object-fit:cover;filter:brightness(0.6);}
+.card-badge{position:absolute;top:14px;left:14px;padding:4px 12px;border-radius:20px;font-size:0.7em;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;}
+.card-body{padding:20px;}
+.card-body h3{font-size:1.2em;font-weight:800;margin-bottom:6px;}
+.card-body p{font-size:0.82em;color:rgba(255,255,255,0.45);line-height:1.6;font-weight:300;}
+.card-body .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}
+.card-body .tag{padding:3px 10px;border-radius:20px;font-size:0.68em;background:rgba(0,102,177,0.12);color:rgba(0,102,177,0.8);border:1px solid rgba(0,102,177,0.15);font-weight:500;}
+.tip{text-align:center;font-size:0.8em;color:rgba(255,255,255,0.25);margin-top:40px;}
+.idx-footer{text-align:center;padding:28px;color:rgba(255,255,255,0.12);font-size:0.7em;letter-spacing:0.12em;margin-top:40px;border-top:1px solid rgba(255,255,255,0.04);}
+</style></head><body>
+<div class="bmw-bar"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="bmw-roundel">
+  <circle cx="50" cy="50" r="49" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+  <circle cx="50" cy="50" r="48" fill="#1a1a1a"/>
+  <circle cx="50" cy="50" r="37" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.2"/>
+  <circle cx="50" cy="50" r="36" fill="white"/>
+  <path d="M50 14 A36 36 0 0 1 86 50 L50 50 Z" fill="#0066B1"/>
+  <path d="M50 86 A36 36 0 0 1 14 50 L50 50 Z" fill="#0066B1"/>
+  <text x="50" y="11" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="8.5" fill="white" letter-spacing="2.5">BMW</text>
+</svg><div class="bar-text">R&D Workshop</div></div>
+<div class="m-bar"><span class="mb1"></span><span class="mb2"></span><span class="mb3"></span></div>
+<div class="page">
+<h1>Photo Album Themes</h1>
+<div class="sub">📸 포토앨범 테마 — 3가지 디자인 중 마음에 드는 테마를 선택하세요</div>
+<div class="cards">
+  <a class="card" href="theme_a_memories.html">
+    <div class="card-img" style="background:linear-gradient(135deg,#faf6f0,#e8d5b7);"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3.5em;opacity:0.5;">📷</div></div>
+    <div class="card-body">
+      <h3>A. Memories</h3>
+      <p>따뜻한 필름/폴라로이드 감성. 세리프 타이포그래피, 빈티지 톤, 회전하는 폴라로이드 카드.</p>
+      <div class="tags"><span class="tag">Warm</span><span class="tag">Film</span><span class="tag">Polaroid</span><span class="tag">Serif</span></div>
+    </div>
+  </a>
+  <a class="card" href="theme_b_editorial.html">
+    <div class="card-img" style="background:#1a1a1a;"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3.5em;opacity:0.5;">📐</div></div>
+    <div class="card-body">
+      <h3>B. Editorial</h3>
+      <p>모던 매거진 에디토리얼 스타일. Full-bleed 히어로, 벤토 그리드, 볼드 타이포그래피.</p>
+      <div class="tags"><span class="tag">Bold</span><span class="tag">Magazine</span><span class="tag">Bento Grid</span><span class="tag">Modern</span></div>
+    </div>
+  </a>
+  <a class="card" href="theme_c_dancheong.html">
+    <div class="card-img" style="background:linear-gradient(135deg,#0D0D0D,#161616,#0066B1);"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><div style="display:flex;height:4px;width:60%;gap:0;"><span style="flex:1;background:#0066B1;"></span><span style="flex:1;background:#003A70;"></span><span style="flex:1;background:#E2001A;"></span></div></div></div>
+    <div class="card-body">
+      <h3>C. M Night</h3>
+      <p>BMW 프리미엄 다크 테마. M-stripe 악센트, 미니멀 그리드, 산세리프 타이포, 오토모티브 감성.</p>
+      <div class="tags"><span class="tag">Dark</span><span class="tag">BMW Premium</span><span class="tag">M-Stripe</span><span class="tag">Minimal</span></div>
+    </div>
+  </a>
+</div>
+<div class="tip">각 테마를 클릭해서 미리보기 → 마음에 드는 걸 알려주세요!</div>
+<div class="idx-footer">BMW R&D Workshop · Photo Album · Theme Selector</div>
+</div></body></html>
